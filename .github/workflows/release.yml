@@ -1,0 +1,98 @@
+# Builds the addon zip and publishes a GitHub release.
+#
+# Two ways to start it:
+#   1. Push a tag:   git tag v1.0.0   then   git push origin v1.0.0
+#   2. From GitHub:  Actions tab > Release > Run workflow > type the version
+#
+# What it does:
+#   - Converts README.md into README.txt (plain text, readable in Notepad).
+#   - Copies the addon files into an OverlayMap_ZoneBorders folder (the name the game needs).
+#   - Writes the version into the .toc inside the zip.
+#   - Zips the folder and publishes a release with the zip attached. The zip
+#     name ends in "-forever" so WowUp knows it is for WoW: Forever.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, for example 1.0.1"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  ADDON: OverlayMap_ZoneBorders
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Work out the version
+        id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="$INPUT_VERSION"
+          else
+            VERSION="$GITHUB_REF_NAME"
+          fi
+          VERSION="${VERSION#v}"
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+(\.[0-9]+)*$'; then
+            echo "The version must look like 1.0.1, but it is: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Build the addon folder
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          OUT="build/$ADDON"
+          mkdir -p "$OUT"
+
+          # Addon files: the .toc, the outlines and their licences
+          cp "$ADDON.toc" "$OUT/"
+          cp -r Zone "$OUT/"
+          cp LICENSE-*.txt "$OUT/"
+          if [ -f LICENSE ]; then cp LICENSE "$OUT/LICENSE.txt"; fi
+          if [ -f CHANGELOG.md ]; then cp CHANGELOG.md "$OUT/CHANGELOG.md"; fi
+
+          # README.md -> README.txt
+          pandoc README.md --from gfm --to plain --columns=78 --output "$OUT/README.txt"
+
+          # Version from the tag goes into the .toc
+          sed -i "s/^## Version:.*/## Version: $VERSION/" "$OUT/$ADDON.toc"
+
+          # (a check: an outline missing would leave Zone Border with nothing for that zone)
+          COUNT=$(ls "$OUT/Zone"/*.tga | wc -l)
+          echo "Outlines: $COUNT pictures"
+          if [ "$COUNT" -lt 1000 ]; then
+            echo "Too few pictures in Zone ($COUNT): check the folder was committed in full."
+            exit 1
+          fi
+
+          cd build
+          zip -r -9 "../$ADDON-v$VERSION-forever.zip" "$ADDON"
+          cd ..
+          ls -la "$ADDON-v$VERSION-forever.zip"
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Overlay Map Zone Borders v${{ steps.version.outputs.version }}
+          files: ${{ env.ADDON }}-v${{ steps.version.outputs.version }}-forever.zip
+          generate_release_notes: true

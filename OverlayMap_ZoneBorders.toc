@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: Overlay Map: Zone Borders
+## Notes: The zone outlines for Overlay Map's Zone Border option. Loaded only when that option is on.
+## Author: benja2030
+## Version: 1.0.0
+## Dependencies: OverlayMap
+## LoadOnDemand: 1
+## X-Credits: Stormwind and Orgrimmar outlines from Waymark (MIT licence); Ironforge and Undercity placed with TerrainWorldMap's data (MIT licence)

@@ -1,0 +1,14 @@
+# Only what the addon needs (and the repository's own files) is committed; anything else in the
+# folder (extracted game data, test pictures, notes) stays out.
+/*
+!/.gitignore
+!/.gitattributes
+!/.github/
+!/OverlayMap_ZoneBorders.toc
+!/README.md
+!/CHANGELOG.md
+!/LICENSE
+!/LICENSE-*.txt
+!/Zone/
+/Zone/*
+!/Zone/*.tga
