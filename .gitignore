@@ -12,3 +12,7 @@
 !/Zone/
 /Zone/*
 !/Zone/*.tga
+!/Caves.lua
+!/Cave/
+/Cave/*
+!/Cave/*.tga
