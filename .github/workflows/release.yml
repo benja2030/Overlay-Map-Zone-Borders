@@ -66,6 +66,9 @@ jobs:
           # Addon files: the .toc, the outlines and their licences
           cp "$ADDON.toc" "$OUT/"
           cp -r Zone "$OUT/"
+          # (the caves' shapes and their list)
+          if [ -d Cave ]; then cp -r Cave "$OUT/"; fi
+          if [ -f Caves.lua ]; then cp Caves.lua "$OUT/"; fi
           cp LICENSE-*.txt "$OUT/"
           if [ -f LICENSE ]; then cp LICENSE "$OUT/LICENSE.txt"; fi
           if [ -f CHANGELOG.md ]; then cp CHANGELOG.md "$OUT/CHANGELOG.md"; fi
@@ -82,6 +85,15 @@ jobs:
           if [ "$COUNT" -lt 1000 ]; then
             echo "Too few pictures in Zone ($COUNT): check the folder was committed in full."
             exit 1
+          fi
+          # (the .toc loads Caves.lua: without it, or without the masks, caves fall back to their box)
+          if grep -q "Caves.lua" "$OUT/$ADDON.toc"; then
+            CAVES=$(ls "$OUT/Cave"/*.tga 2>/dev/null | wc -l)
+            echo "Caves: $CAVES masks"
+            if [ ! -f "$OUT/Caves.lua" ] || [ "$CAVES" -lt 400 ]; then
+              echo "Caves.lua or the Cave masks are missing: check they were committed."
+              exit 1
+            fi
           fi
 
           cd build

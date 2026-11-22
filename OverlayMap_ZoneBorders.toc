@@ -2,7 +2,7 @@
 ## Title: Overlay Map: Zone Borders
 ## Notes: The zone and cave outlines for Overlay Map's Zone Border option. Loaded only when that option is on.
 ## Author: benja2030
-## Version: 1.1.0
+## Version: 1.1.1
 ## Dependencies: OverlayMap
 ## LoadOnDemand: 1
 ## X-Credits: Stormwind and Orgrimmar outlines from Waymark (MIT licence); Ironforge and Undercity placed with TerrainWorldMap's data (MIT licence); cave shapes from the game's minimap pictures, as OpenMap lists them (MIT licence)
