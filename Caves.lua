@@ -251,4 +251,32 @@ OverlayMap_ZoneBordersCaves = {
 	["1 -8396 262 -8127 582"] = 246,   -- mini-hive_b
 	["1 -8553 -3097 -8511 -3055"] = 247,   -- md_brogremound1room
 	["1 -10738 2025 -10459 2247"] = 248,   -- md_mushroomcave09
+	-- the caves with a Blizzard cave map whose cut is opened at their entrances (Cave\m<id>.tga: OpenMap's mask of
+	-- the cave, MIT licence, with the openings; made by cavemouths.py), by the cave map's ID
+	["map 2"] = "m2",
+	["map 3"] = "m3",
+	["map 5"] = "m5",
+	["map 6"] = "m6",
+	["map 8"] = "m8",
+	["map 9"] = "m9",
+	["map 11"] = "m11",
+	["map 19"] = "m19",
+	["map 28"] = "m28",
+	["map 29"] = "m29",
+	["map 31"] = "m31",
+	["map 33"] = "m33",
+	["map 38"] = "m38",
+	["map 39"] = "m39",
+	["map 40"] = "m40",
+	["map 53"] = "m53",
+	["map 54"] = "m54",
+	["map 55"] = "m55",
+	["map 58"] = "m58",
+	["map 59"] = "m59",
+	["map 79"] = "m79",
+	["map 82"] = "m82",
+	["map 426"] = "m426",
+	["map 428"] = "m428",
+	["map 466"] = "m466",
+	["map 470"] = "m470",
 }
